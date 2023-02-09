@@ -1,0 +1,4 @@
+# Versions for the stable channel
+manifests:
+- name: argocd
+  version: 0.0.1

@@ -1,0 +1,47 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  creationTimestamp: null
+  name: manager-role
+rules:
+- apiGroups:
+  - addons.configdelivery.anthos.io
+  resources:
+  - argocds
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - addons.configdelivery.anthos.io
+  resources:
+  - argocds/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - addons.configdelivery.anthos.io
+  resources:
+  - configsyncs
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - addons.configdelivery.anthos.io
+  resources:
+  - configsyncs/status
+  verbs:
+  - get
+  - patch
+  - update

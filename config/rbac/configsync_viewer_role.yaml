@@ -1,0 +1,20 @@
+# permissions for end users to view configsyncs.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: configsync-viewer-role
+rules:
+- apiGroups:
+  - addons.configdelivery.anthos.io
+  resources:
+  - configsyncs
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - addons.configdelivery.anthos.io
+  resources:
+  - configsyncs/status
+  verbs:
+  - get
