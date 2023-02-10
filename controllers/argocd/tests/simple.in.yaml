@@ -1,0 +1,6 @@
+apiVersion: addons.configdelivery.anthos.io/v1alpha1
+kind: ArgoCD
+metadata:
+  name: argocd-sample
+spec:
+  version: 0.0.1

@@ -1,7 +1,6 @@
-package controllers
+package configsync
 
 import (
-	addonsv1alpha1 "acp.git.corp.google.com/moss/api/v1alpha1"
 	"github.com/go-logr/logr"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -13,12 +12,14 @@ import (
 	"sigs.k8s.io/kubebuilder-declarative-pattern/pkg/patterns/addon"
 	"sigs.k8s.io/kubebuilder-declarative-pattern/pkg/patterns/addon/pkg/status"
 	"sigs.k8s.io/kubebuilder-declarative-pattern/pkg/patterns/declarative"
+
+	addonsv1alpha1 "acp.git.corp.google.com/moss/api/v1alpha1"
 )
 
-var _ reconcile.Reconciler = &ArgoCDReconciler{}
+var _ reconcile.Reconciler = &ConfigSyncReconciler{}
 
-// ArgoCDReconciler reconciles a ArgoCD object
-type ArgoCDReconciler struct {
+// ConfigSyncReconciler reconciles a ConfigSync object
+type ConfigSyncReconciler struct {
 	client.Client
 	Log    logr.Logger
 	Scheme *runtime.Scheme
@@ -26,35 +27,35 @@ type ArgoCDReconciler struct {
 	declarative.Reconciler
 }
 
-//+kubebuilder:rbac:groups=addons.configdelivery.anthos.io,resources=argocds,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=addons.configdelivery.anthos.io,resources=argocds/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=addons.configdelivery.anthos.io,resources=configsyncs,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=addons.configdelivery.anthos.io,resources=configsyncs/status,verbs=get;update;patch
 
 // SetupWithManager sets up the controller with the Manager.
-func (r *ArgoCDReconciler) SetupWithManager(mgr ctrl.Manager) error {
+func (r *ConfigSyncReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	addon.Init()
 
 	labels := map[string]string{
-		"k8s-app": "argocd",
+		"k8s-app": "configsync",
 	}
 
 	watchLabels := declarative.SourceLabel(mgr.GetScheme())
-	if err := r.Reconciler.Init(mgr, &addonsv1alpha1.ArgoCD{},
+	if err := r.Reconciler.Init(mgr, &addonsv1alpha1.ConfigSync{},
 		declarative.WithObjectTransform(declarative.AddLabels(labels)),
 		declarative.WithOwner(declarative.SourceAsOwner),
 		declarative.WithLabels(watchLabels),
-		declarative.WithStatus(status.NewKstatusCheck(mgr.GetClient(), &r.Reconciler)),
+		declarative.WithStatus(status.NewBasic(mgr.GetClient())),
 		declarative.WithObjectTransform(addon.ApplyPatches),
 	); err != nil {
 		return err
 	}
 
-	c, err := controller.New("argocd-controller", mgr, controller.Options{Reconciler: r})
+	c, err := controller.New("configsync-controller", mgr, controller.Options{Reconciler: r})
 	if err != nil {
 		return err
 	}
 
-	// Watch for changes to ArgoCD
-	err = c.Watch(&source.Kind{Type: &addonsv1alpha1.ArgoCD{}}, &handler.EnqueueRequestForObject{})
+	// Watch for changes to ConfigSync
+	err = c.Watch(&source.Kind{Type: &addonsv1alpha1.ConfigSync{}}, &handler.EnqueueRequestForObject{})
 	if err != nil {
 		return err
 	}
