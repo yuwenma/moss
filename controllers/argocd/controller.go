@@ -2,7 +2,6 @@ package argocd
 
 import (
 	"context"
-	"fmt"
 
 	addonsv1alpha1 "acp.git.corp.google.com/moss/api/v1alpha1"
 	"github.com/go-logr/logr"
@@ -51,12 +50,13 @@ func (r *ArgoCDReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	// applier := applier.NewApplySetApplier(metav1.PatchOptions{})
 
 	watchLabels := declarative.SourceLabel(mgr.GetScheme())
+
 	if err := r.Reconciler.Init(mgr, &addonsv1alpha1.ArgoCD{},
+		declarative.WithLabels(watchLabels),
 		declarative.WithObjectTransform(declarative.AddLabels(labels)),
 		declarative.WithOwner(declarative.SourceAsOwner),
 		declarative.WithObjectTransform(
 			declarative.AddLabels(labels),
-			r.SetNamespace,
 		),
 		// TODO: Define `ArgoCD.Status` to ack users the health status; k-d-p side needs to extend the kstatus support.
 		declarative.WithStatus(status.NewKstatusCheck(mgr.GetClient(), &r.Reconciler)),
@@ -94,30 +94,6 @@ func (r *ArgoCDReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	}
 
 	return nil
-}
-
-// SetNamespace guarantees the ArgoCD manifests are in the "argocd" namespace.
-// This method is necessary because the upstream OSS argocd manifests do not have "namespace" assigned. Instead,
-// it asks users to change the KubeContext to "argocd" namespace for manual installation.
-//
-// For production reliability concerns, the Google managed ArgoCD manifests should have their namespace assigned
-// before checking into the channels/packages using the `set-namespace` KRM function.
-//
-// This function currently assigns the namespace for the Private Preview ArgoCD manifests. But we cannot guarantee
-// the coverage for all the future ArgoCD manifests. Eventually, this method should just be a sanity check,
-// and we should rely on kpt or kustomize to assign the right namespace.
-func (r *ArgoCDReconciler) SetNamespace(ctx context.Context, _ declarative.DeclarativeObject, objects *manifest.Objects) error {
-	log := log.FromContext(ctx)
-	for _, object := range objects.Items {
-		err := object.SetNestedField(ArgoCDNamespace, "metadata", "namespace")
-		if err != nil {
-			log.WithValues("kind", object.GroupVersionKind(), "name", object.GetName()).Error(
-				err, "unable to set namespace")
-			return err
-		}
-		log.WithValues("object", fmt.Sprintf("%s", object.GroupVersionKind().String())).Info("set namespace to argocd")
-	}
-	return r.namespaceExist(ctx, objects)
 }
 
 // namespaceExist guarantees the `ArgoCD` namespace exist in the cluster. This is not necessary if the deployment manifest
