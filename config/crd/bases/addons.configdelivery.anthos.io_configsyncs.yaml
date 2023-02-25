@@ -13,7 +13,7 @@ spec:
     listKind: ConfigSyncList
     plural: configsyncs
     singular: configsync
-  scope: Namespaced
+  scope: Cluster
   versions:
   - name: v1alpha1
     schema:

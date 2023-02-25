@@ -27,6 +27,7 @@ type ArgoCDStatus struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
+//+kubebuilder:resource:scope=Cluster
 
 // ArgoCD is the Schema for the argocds API
 type ArgoCD struct {

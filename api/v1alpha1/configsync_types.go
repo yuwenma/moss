@@ -27,6 +27,7 @@ type ConfigSyncStatus struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
+//+kubebuilder:resource:scope=Cluster
 
 // ConfigSync is the Schema for the configsyncs API
 type ConfigSync struct {
