@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"acp.git.corp.google.com/moss/controllers/argocd"
-	"acp.git.corp.google.com/moss/controllers/configsync"
 
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	// to ensure that exec-entrypoint and run can make use of them.
@@ -69,13 +68,6 @@ func main() {
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "ArgoCD")
-		os.Exit(1)
-	}
-	if err = (&configsync.ConfigSyncReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
-	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "ConfigSync")
 		os.Exit(1)
 	}
 	//+kubebuilder:scaffold:builder

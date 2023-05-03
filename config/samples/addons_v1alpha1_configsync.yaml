@@ -1,6 +1,0 @@
-apiVersion: addons.configdelivery.anthos.io/v1alpha1
-kind: ConfigSync
-metadata:
-  name: configsync-sample
-spec:
-  version: 1.14.1
