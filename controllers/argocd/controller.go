@@ -6,6 +6,7 @@ import (
 	addonsv1alpha1 "acp.git.corp.google.com/moss/api/v1alpha1"
 	"github.com/go-logr/logr"
 	"github.com/pkg/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -17,6 +18,7 @@ import (
 	"sigs.k8s.io/kubebuilder-declarative-pattern/pkg/patterns/addon"
 	"sigs.k8s.io/kubebuilder-declarative-pattern/pkg/patterns/addon/pkg/status"
 	"sigs.k8s.io/kubebuilder-declarative-pattern/pkg/patterns/declarative"
+	"sigs.k8s.io/kubebuilder-declarative-pattern/pkg/patterns/declarative/pkg/applier"
 	"sigs.k8s.io/kubebuilder-declarative-pattern/pkg/patterns/declarative/pkg/manifest"
 )
 
@@ -47,8 +49,7 @@ func (r *ArgoCDReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		"k8s-app": "argocd",
 	}
 	// TODO: (k-d-p side) Need the applyset prune logic for this applier.
-	// applier := applier.NewApplySetApplier(metav1.PatchOptions{})
-
+	applier := applier.NewApplySetApplier(metav1.PatchOptions{}, metav1.DeleteOptions{}, applier.ApplysetOptions{})
 	watchLabels := declarative.SourceLabel(mgr.GetScheme())
 
 	if err := r.Reconciler.Init(mgr, &addonsv1alpha1.ArgoCD{},
@@ -61,9 +62,8 @@ func (r *ArgoCDReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		// TODO: Define `ArgoCD.Status` to ack users the health status; k-d-p side needs to extend the kstatus support.
 		declarative.WithStatus(status.NewKstatusCheck(mgr.GetClient(), &r.Reconciler)),
 		declarative.WithObjectTransform(addon.ApplyPatches),
-		// The default applier relies on kubectl lib to apply and to prune, we should switch to applier.NewApplySetApplier
-		// if we want to integrate with GKE HUB.
-		// declarative.WithApplier(applier),
+		declarative.WithApplier(applier),
+		declarative.WithApplyPrune(),
 	); err != nil {
 		return err
 	}
@@ -123,3 +123,10 @@ func (r *ArgoCDReconciler) namespaceExist(ctx context.Context, objects *manifest
 	log.WithValues("namespace", namespace).Info("created namespace")
 	return nil
 }
+
+// for WithApplyPrune
+// +kubebuilder:rbac:groups=*,resources=*,verbs=list
+
+// +kubebuilder:rbac:groups="",resources=services,verbs=get;list;watch;create;update;delete;patch
+// +kubebuilder:rbac:groups="",resources=events,verbs=get;list;watch;create;update;delete;patch
+// +kubebuilder:rbac:groups=apps;extensions,resources=deployments,verbs=get;list;watch;create;update;delete;patch

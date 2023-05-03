@@ -19,7 +19,8 @@ type ArgoCDSpec struct {
 
 // ArgoCDStatus defines the observed state of ArgoCD
 type ArgoCDStatus struct {
-	addonv1alpha1.CommonStatus `json:",inline"`
+	addonv1alpha1.CommonStatus     `json:",inline"`
+	addonv1alpha1.StatusConditions `json:",inline"`
 
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
@@ -38,6 +39,7 @@ type ArgoCD struct {
 	Status ArgoCDStatus `json:"status,omitempty"`
 }
 
+var _ addonv1alpha1.CommonObject = &ArgoCD{}
 var _ addonv1alpha1.CommonObject = &ArgoCD{}
 
 func (o *ArgoCD) ComponentName() string {
