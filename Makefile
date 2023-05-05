@@ -67,7 +67,7 @@ build: generate fmt vet ## Build manager binary.
 
 .PHONY: run
 run: manifests generate fmt vet ## Run a controller from your host.
-	go run -tags without-kustomize ./main.go
+	go run -tags without_kustomize,without_exec_applier,without_direct_applier ./main.go
 
 
 .PHONY: docker-push
