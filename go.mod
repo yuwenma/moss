@@ -1,4 +1,4 @@
-module acp.git.corp.google.com/moss
+module github.com/yuwenma/moss
 
 go 1.19
 
