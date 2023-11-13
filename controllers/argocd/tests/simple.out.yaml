@@ -10367,6 +10367,7 @@ spec:
         - name: NAMESPACE
           valueFrom:
             fieldRef:
+              apiVersion: v1
               fieldPath: metadata.namespace
         image: quay.io/argoproj/argocd:v2.5.11
         imagePullPolicy: Always
@@ -10374,8 +10375,10 @@ spec:
         ports:
         - containerPort: 7000
           name: webhook
+          protocol: TCP
         - containerPort: 8080
           name: metrics
+          protocol: TCP
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -10861,7 +10864,9 @@ spec:
         name: argocd-repo-server
         ports:
         - containerPort: 8081
+          protocol: TCP
         - containerPort: 8084
+          protocol: TCP
         readinessProbe:
           httpGet:
             path: /healthz
@@ -11189,7 +11194,9 @@ spec:
         name: argocd-server
         ports:
         - containerPort: 8080
+          protocol: TCP
         - containerPort: 8083
+          protocol: TCP
         readinessProbe:
           httpGet:
             path: /healthz
@@ -11685,6 +11692,7 @@ spec:
     - namespaceSelector: {}
     ports:
     - port: 8082
+      protocol: TCP
   podSelector:
     matchLabels:
       app.kubernetes.io/name: argocd-application-controller
@@ -11895,6 +11903,7 @@ spec:
     - namespaceSelector: {}
     ports:
     - port: 8084
+      protocol: TCP
   podSelector:
     matchLabels:
       app.kubernetes.io/name: argocd-repo-server

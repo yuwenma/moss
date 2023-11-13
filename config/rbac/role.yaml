@@ -68,3 +68,23 @@ rules:
   - patch
   - update
   - watch
+- apiGroups:
+  - configdelivery.anthos.io
+  resources:
+  - configsyncs
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - configdelivery.anthos.io
+  resources:
+  - configsyncs/status
+  verbs:
+  - get
+  - patch
+  - update

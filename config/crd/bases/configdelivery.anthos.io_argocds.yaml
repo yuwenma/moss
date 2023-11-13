@@ -5,9 +5,9 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.8.0
   creationTimestamp: null
-  name: argocds.addons.configdelivery.anthos.io
+  name: argocds.configdelivery.anthos.io
 spec:
-  group: addons.configdelivery.anthos.io
+  group: configdelivery.anthos.io
   names:
     kind: ArgoCD
     listKind: ArgoCDList
