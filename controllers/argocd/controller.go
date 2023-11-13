@@ -3,7 +3,7 @@ package argocd
 import (
 	"context"
 
-	addonsv1alpha1 "acp.git.corp.google.com/moss/api/v1alpha1"
+	addonsv1alpha1 "github.com/yuwenma/moss/moss/api/v1alpha1"
 	"github.com/go-logr/logr"
 	"github.com/pkg/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"

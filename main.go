@@ -4,8 +4,8 @@ import (
 	"flag"
 	"os"
 
-	"acp.git.corp.google.com/moss/controllers/argocd"
-	"acp.git.corp.google.com/moss/controllers/configsync"
+	"github.com/yuwenma/moss/moss/controllers/argocd"
+	"github.com/yuwenma/moss/moss/controllers/configsync"
 
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	// to ensure that exec-entrypoint and run can make use of them.
@@ -18,7 +18,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	addonsv1alpha1 "acp.git.corp.google.com/moss/api/v1alpha1"
+	addonsv1alpha1 "github.com/yuwenma/moss/moss/api/v1alpha1"
 	//+kubebuilder:scaffold:imports
 )
 

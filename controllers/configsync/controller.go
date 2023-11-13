@@ -13,7 +13,7 @@ import (
 	"sigs.k8s.io/kubebuilder-declarative-pattern/pkg/patterns/addon/pkg/status"
 	"sigs.k8s.io/kubebuilder-declarative-pattern/pkg/patterns/declarative"
 
-	addonsv1alpha1 "acp.git.corp.google.com/moss/api/v1alpha1"
+	addonsv1alpha1 "github.com/yuwenma/moss/moss/api/v1alpha1"
 )
 
 var _ reconcile.Reconciler = &ConfigSyncReconciler{}

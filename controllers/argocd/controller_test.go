@@ -3,7 +3,7 @@ package argocd
 import (
 	"testing"
 
-	addonsv1alpha1 "acp.git.corp.google.com/moss/api/v1alpha1"
+	addonsv1alpha1 "github.com/yuwenma/moss/moss/api/v1alpha1"
 	"sigs.k8s.io/kubebuilder-declarative-pattern/pkg/test/golden"
 )
 
